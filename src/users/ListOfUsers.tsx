@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { useUsers } from '@/hooks/useUsers'
 
 import { Pencil, Trash } from 'lucide-react'
+import { CreateNewUser } from './CreateNewUser'
 
 export const ListOfUsers = () => {
   const { users, deleteUser } = useUsers()
@@ -47,7 +48,7 @@ export const ListOfUsers = () => {
                   <img
                     src={`https://unavatar.io/github/${user.github}`}
                     alt={`Avatar of ${user.github}`}
-                    className="size-12 rounded-full"
+                    className="size-12 rounded-full shrink-0"
                   />
                   {user.name}
                 </TableCell>
@@ -71,6 +72,8 @@ export const ListOfUsers = () => {
           </TableBody>
         </Table>
       </Card>
+
+      <CreateNewUser />
     </div>
   )
 }
