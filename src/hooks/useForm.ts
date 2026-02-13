@@ -9,8 +9,6 @@ export const useForm = <T extends FormState>(initialFormState: T) => {
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value: inputValue, name: inputName } = event.target
 
-    console.log({ inputValue, inputName })
-
     setFormState((prevFormState) => ({
       ...prevFormState,
       [inputName as keyof T]: inputValue,
