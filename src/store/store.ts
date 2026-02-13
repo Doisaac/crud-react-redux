@@ -19,7 +19,7 @@ startAppListening({
       (user) => user.id === userIdToRemove,
     )
 
-    fetch(`https://jsonplaceholder.typicode.com/ussdfers/${action.payload}`, {
+    fetch(`https://jsonplaceholder.typicode.com/users/${action.payload}`, {
       method: 'DELETE',
     })
       .then((res) => {
