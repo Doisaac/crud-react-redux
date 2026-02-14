@@ -6,7 +6,7 @@ export interface User {
   github: string
 }
 
-interface UserWithId extends User {
+export interface UserWithId extends User {
   id: string
 }
 
@@ -77,6 +77,14 @@ export const usersSlice = createSlice({
     deleteUserById: (state, { payload }: PayloadAction<string>) => {
       return state.filter((user) => user.id !== payload)
     },
+    editUserById: (state, { payload }: PayloadAction<UserWithId>) => {
+      return state.map((user) => {
+        if (user.id === payload.id) {
+          return payload
+        }
+        return user
+      })
+    },
     rollbackUser: (state, { payload }: PayloadAction<UserWithId>) => {
       const isUserAlreadyDefined = state.find((user) => user.id === payload.id)
       if (!isUserAlreadyDefined) {
@@ -86,5 +94,6 @@ export const usersSlice = createSlice({
   },
 })
 
-export const { addNewUser, deleteUserById, rollbackUser } = usersSlice.actions
+export const { addNewUser, deleteUserById, editUserById, rollbackUser } =
+  usersSlice.actions
 export default usersSlice.reducer

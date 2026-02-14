@@ -14,9 +14,12 @@ import { useUsers } from '@/hooks/useUsers'
 
 import { Pencil, Trash } from 'lucide-react'
 import { CreateNewUser } from './CreateNewUser'
+import { useState } from 'react'
+import type { UserWithId } from '@/store/users/users.slice'
 
 export const ListOfUsers = () => {
   const { users, deleteUser } = useUsers()
+  const [selectedUser, setSelectedUser] = useState<null | UserWithId>(null)
 
   return (
     <div className="flex max-w-2xl mx-auto flex-col items-center p-2">
@@ -55,7 +58,11 @@ export const ListOfUsers = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant={'default'} size={'icon'}>
+                    <Button
+                      variant={'default'}
+                      size={'icon'}
+                      onClick={() => setSelectedUser(user)}
+                    >
                       <Pencil size={52} />
                     </Button>
                     <Button
@@ -73,7 +80,10 @@ export const ListOfUsers = () => {
         </Table>
       </Card>
 
-      <CreateNewUser />
+      <CreateNewUser
+        selectedUser={selectedUser}
+        onCancelSelectedUser={() => setSelectedUser(null)}
+      />
     </div>
   )
 }

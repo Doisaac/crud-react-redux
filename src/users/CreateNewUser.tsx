@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from 'react'
+import { useEffect, useState, type SubmitEvent } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { useForm, type InputValidators } from '@/hooks/useForm'
 import { useUsers } from '@/hooks/useUsers'
 import { cn } from '@/lib/utils'
+import type { UserWithId } from '@/store/users/users.slice'
 
 const initialFormState = {
   name: '',
@@ -31,7 +32,15 @@ const validators: InputValidators<typeof initialFormState> = {
   ],
 }
 
-export const CreateNewUser = () => {
+interface CreateNewUserProps {
+  selectedUser?: UserWithId | null
+  onCancelSelectedUser: () => void
+}
+
+export const CreateNewUser = ({
+  selectedUser,
+  onCancelSelectedUser,
+}: CreateNewUserProps) => {
   const {
     name,
     github,
@@ -41,35 +50,62 @@ export const CreateNewUser = () => {
     nameValid,
     githubValid,
     emailValid,
+    onSetSelectedUser,
+    isFormValid,
   } = useForm(initialFormState, validators)
 
+  useEffect(() => {
+    // Reset form when no user is selected
+    if (!selectedUser) {
+      onResetForm()
+      return
+    }
+
+    onSetSelectedUser({
+      name: selectedUser.name,
+      email: selectedUser.email,
+      github: selectedUser.github,
+    })
+  }, [selectedUser, onSetSelectedUser, onResetForm])
+
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false)
-  const { addUser } = useUsers()
+  const { addUser, editUser } = useUsers()
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     setHasSubmitted(true)
 
     // Validations
-    if (!!nameValid || !!githubValid || !!emailValid) {
+    if (!isFormValid) {
       return
     }
 
-    addUser({
-      email,
-      github,
-      name,
-    })
-
-    toast.success('User successfully added')
+    // Check if user is editing
+    if (selectedUser) {
+      editUser({
+        id: selectedUser.id,
+        email,
+        github,
+        name,
+      })
+      toast.success('User successfully updated')
+    } else {
+      addUser({
+        email,
+        github,
+        name,
+      })
+      toast.success('User successfully added')
+    }
 
     setHasSubmitted(false)
+    onCancelSelectedUser()
     onResetForm()
   }
 
   return (
     <Card className="mt-4 w-full px-2">
-      <CardTitle>Create New User</CardTitle>
+      <CardTitle>{selectedUser ? 'Edit User' : 'Create New User'}</CardTitle>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <Field>
@@ -126,9 +162,26 @@ export const CreateNewUser = () => {
           </FieldDescription>
         </Field>
 
-        <Button type="submit" variant={'default'}>
-          Create User
-        </Button>
+        {selectedUser ? (
+          <Button type="submit" variant={'default'}>
+            Edit User
+          </Button>
+        ) : (
+          <Button type="submit" variant={'default'}>
+            Create User
+          </Button>
+        )}
+
+        {selectedUser && (
+          <Button
+            type="button"
+            variant={'outline'}
+            className="ml-2"
+            onClick={onCancelSelectedUser}
+          >
+            Cancel
+          </Button>
+        )}
       </form>
     </Card>
   )

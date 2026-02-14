@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent } from 'react'
+import { useCallback, useMemo, useState, type ChangeEvent } from 'react'
 
 type FormState = Record<string, string>
 
@@ -63,9 +63,13 @@ export const useForm = <T extends FormState>(
   }
 
   // Reset form values
-  const onResetForm = () => {
+  const onResetForm = useCallback(() => {
     setFormState(initialFormState)
-  }
+  }, [initialFormState])
+
+  const onSetSelectedUser = useCallback((user: T) => {
+    setFormState(user)
+  }, [])
 
   return {
     // Properties
@@ -78,5 +82,6 @@ export const useForm = <T extends FormState>(
     // Methods
     onInputChange,
     onResetForm,
+    onSetSelectedUser,
   }
 }

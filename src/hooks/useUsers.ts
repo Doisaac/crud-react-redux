@@ -2,7 +2,9 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   addNewUser,
   deleteUserById,
+  editUserById,
   type User,
+  type UserWithId,
 } from '@/store/users/users.slice'
 
 export const useUsers = () => {
@@ -11,6 +13,10 @@ export const useUsers = () => {
 
   const addUser = (user: User) => {
     dispatch(addNewUser(user))
+  }
+
+  const editUser = (user: UserWithId) => {
+    dispatch(editUserById(user))
   }
 
   const deleteUser = (id: string) => {
@@ -24,5 +30,6 @@ export const useUsers = () => {
     // Methods
     addUser,
     deleteUser,
+    editUser,
   }
 }
