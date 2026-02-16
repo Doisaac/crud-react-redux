@@ -4,7 +4,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-display: swap;
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  src: url('/nunito.woff2') format("woff2");
+}
+
 @theme inline {
+  /* Custom font */
+  --font-sans: 'Nunito Sans', serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
