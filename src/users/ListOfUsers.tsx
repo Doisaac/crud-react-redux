@@ -22,12 +22,19 @@ export const ListOfUsers = () => {
   const [selectedUser, setSelectedUser] = useState<null | UserWithId>(null)
 
   return (
-    <div className="flex max-w-2xl mx-auto flex-col items-center p-2">
-      <h1 className="text-3xl font-extrabold text-indigo-600">
-        crud-react-redux
-      </h1>
+    <div className="flex max-w-2xl mx-auto flex-col items-center">
+      <header className="py-16 flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-extrabold text-blue-800">
+          MANAGE YOUR {''}
+          <span className="text-zinc-800">GITHUB</span>
+        </h1>
 
-      <Card className="w-full mt-2 px-2">
+        <h1 className="text-6xl font-extrabold text-blue-800 line-h">
+          FRIENDS
+        </h1>
+      </header>
+
+      <Card className="w-full max-h-[600px] mt-2 px-2">
         <CardTitle>
           Users
           <Badge className="ml-2">{users.length}</Badge>
@@ -35,10 +42,10 @@ export const ListOfUsers = () => {
 
         <Table>
           <TableCaption>A list of users.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Id</TableHead>
+          <TableHeader className="sticky top-0 bg-background z-10">
+            <TableRow className="*:font-bold">
               <TableHead>Name</TableHead>
+              <TableHead>Username</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -46,7 +53,6 @@ export const ListOfUsers = () => {
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
                 <TableCell className="flex items-center gap-2">
                   <img
                     src={`https://unavatar.io/github/${user.github}`}
@@ -55,6 +61,7 @@ export const ListOfUsers = () => {
                   />
                   {user.name}
                 </TableCell>
+                <TableCell>{user.github}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
