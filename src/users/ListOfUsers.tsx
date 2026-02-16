@@ -22,8 +22,8 @@ export const ListOfUsers = () => {
   const [selectedUser, setSelectedUser] = useState<null | UserWithId>(null)
 
   return (
-    <div className="flex max-w-2xl mx-auto flex-col items-center">
-      <header className="py-16 flex flex-col items-center justify-center">
+    <div className="flex max-w-2xl mx-auto flex-col items-center pb-16 p-6">
+      <header className="py-16 flex flex-col items-center justify-center text-center">
         <h1 className="text-4xl font-extrabold text-blue-800">
           MANAGE YOUR {''}
           <span className="text-zinc-800">GITHUB</span>
