@@ -13,13 +13,25 @@ import { Badge } from '@/components/ui/badge'
 import { useUsers } from '@/hooks/useUsers'
 
 import { Pencil, Trash } from 'lucide-react'
-import { CreateNewUser } from './CreateNewUser'
 import { useState } from 'react'
+import { CreateNewUser } from './CreateNewUser'
 import type { UserWithId } from '@/store/users/users.slice'
+import { toast } from 'sonner'
 
 export const ListOfUsers = () => {
   const { users, deleteUser } = useUsers()
   const [selectedUser, setSelectedUser] = useState<null | UserWithId>(null)
+
+  const onUserClick = async (githubUsername: string) => {
+    try {
+      await navigator.clipboard.writeText(githubUsername)
+      toast.info('GitHub username copied!')
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message)
+      }
+    }
+  }
 
   return (
     <div className="flex max-w-2xl mx-auto flex-col items-center pb-16 p-6">
@@ -52,7 +64,11 @@ export const ListOfUsers = () => {
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id}>
+              <TableRow
+                key={user.id}
+                onClick={() => onUserClick(user.github)}
+                className="cursor-pointer"
+              >
                 <TableCell className="flex items-center gap-2">
                   <img
                     src={`https://unavatar.io/github/${user.github}`}
