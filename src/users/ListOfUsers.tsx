@@ -17,10 +17,12 @@ import { useState } from 'react'
 import { CreateNewUser } from './CreateNewUser'
 import type { UserWithId } from '@/store/users/users.slice'
 import { toast } from 'sonner'
+import { CustomAlertDialog } from '@/components/custom/CustomAlertDialog'
 
 export const ListOfUsers = () => {
   const { users, deleteUser } = useUsers()
   const [selectedUser, setSelectedUser] = useState<null | UserWithId>(null)
+  const [userToDelete, setUserToDelete] = useState<string | null>(null)
 
   const onUserClick = async (githubUsername: string) => {
     try {
@@ -32,6 +34,8 @@ export const ListOfUsers = () => {
       }
     }
   }
+
+  const isDialogOpen = !!userToDelete
 
   return (
     <div className="flex max-w-3xl mx-auto flex-col items-center pb-16 p-6">
@@ -91,7 +95,11 @@ export const ListOfUsers = () => {
                     <Button
                       variant={'destructive'}
                       size={'icon'}
-                      onClick={() => deleteUser(user.id)}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setUserToDelete(user.id)
+                      }}
+                      // onClick={() => deleteUser(user.id)}
                     >
                       <Trash size={52} />
                     </Button>
@@ -106,6 +114,18 @@ export const ListOfUsers = () => {
       <CreateNewUser
         selectedUser={selectedUser}
         onCancelSelectedUser={() => setSelectedUser(null)}
+      />
+
+      <CustomAlertDialog
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) setUserToDelete(null)
+        }}
+        onConfirm={() => {
+          if (!userToDelete) return
+
+          deleteUser(userToDelete)
+        }}
       />
     </div>
   )
