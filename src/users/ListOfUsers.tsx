@@ -13,16 +13,26 @@ import { Badge } from '@/components/ui/badge'
 import { useUsers } from '@/hooks/useUsers'
 
 import { Pencil, Trash } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState, type ChangeEvent } from 'react'
 import { CreateNewUser } from './CreateNewUser'
 import type { UserWithId } from '@/store/users/users.slice'
 import { toast } from 'sonner'
 import { CustomAlertDialog } from '@/components/custom/CustomAlertDialog'
+import { Field } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 
 export const ListOfUsers = () => {
   const { users, deleteUser } = useUsers()
+
   const [selectedUser, setSelectedUser] = useState<null | UserWithId>(null)
   const [userToDelete, setUserToDelete] = useState<string | null>(null)
+  const [search, setSearch] = useState<string>('')
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+
+    setSearch(value)
+  }
 
   const onUserClick = async (githubUsername: string) => {
     try {
@@ -34,6 +44,14 @@ export const ListOfUsers = () => {
       }
     }
   }
+
+  const filteredUsers = useMemo(() => {
+    if (!search) return users
+
+    return users.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()),
+    )
+  }, [search, users])
 
   const isDialogOpen = !!userToDelete
 
@@ -56,6 +74,15 @@ export const ListOfUsers = () => {
           <Badge className="ml-2">{users.length}</Badge>
         </CardTitle>
 
+        <Field orientation="horizontal">
+          <Input
+            type="search"
+            placeholder="Search by name.."
+            value={search}
+            onChange={(event) => handleChange(event)}
+          />
+        </Field>
+
         <Table>
           <TableCaption>A list of users.</TableCaption>
           <TableHeader className="sticky top-0 bg-background z-10">
@@ -67,7 +94,7 @@ export const ListOfUsers = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
+            {filteredUsers?.map((user) => (
               <TableRow
                 key={user.id}
                 onClick={() => onUserClick(user.github)}
