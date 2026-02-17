@@ -34,7 +34,7 @@ export const ListOfUsers = () => {
   }
 
   return (
-    <div className="flex max-w-2xl mx-auto flex-col items-center pb-16 p-6">
+    <div className="flex max-w-3xl mx-auto flex-col items-center pb-16 p-6">
       <header className="py-16 flex flex-col items-center justify-center text-center">
         <h1 className="text-4xl font-extrabold text-blue-800 animate-fade-in">
           MANAGE YOUR {''}
